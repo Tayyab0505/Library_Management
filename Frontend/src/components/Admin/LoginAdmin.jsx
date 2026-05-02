@@ -14,27 +14,22 @@ const LoginAdmin = () => {
     const logAdmin = async (e) => {
         e.preventDefault();
 
-        console.log('logging data');
-
         setLogStatus('');
 
-        const Admin = {
-            email,
-            password
-        }
-
         try {
-            const res = await AdminLogin(Admin);
+            const res = await AdminLogin({ email, password });
 
-            if (res.data.message === 'You are not authorised') {
+            if (res.data.message === 'Welcome Admin') {
+                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('role', 'admin');
+                localStorage.setItem('adminEmail', email);
+                navigate('/dashboard');
+            } else {
                 setLogStatus(res.data.message);
-            } else if (res.data.message === 'Incorrect password') {
-                setLogStatus(res.data.message);
-            } else if (res.data.message === 'Welcome Admin') {
-                navigate('/assignBook');
             };
         } catch (error) {
-            console.error('Failed to add student:', error);
+            setLogStatus('Something went wrong. Please try again.');
+            console.error('Login error:', error);
         };
     };
 
@@ -49,69 +44,44 @@ const LoginAdmin = () => {
         }
     }, [logStatus]);
 
-
     return (
         <>
-            <div className="hero min-h-screen bg-[rgb(245,246,250)] overflow-y-auto py-10 px-4 flex items-start justify-center font-serif">
+            <div className="min-h-screen bg-[rgb(245,246,250)] flex items-center justify-center px-4 font-serif">
+                <div className="w-full max-w-md bg-gray-800 text-white rounded-lg shadow-lg p-8">
+                    <h1 className="text-3xl font-bold text-center mb-6">Admin Login</h1>
 
-                <div className=" sm:w-[50%] lg:w-[95%] bg-gray-800 text-white rounded-lg shadow-lg">
-                    <div className="heading text-center">
-                        <h1 className="my-5 text-3xl sm:text-4xl font-bold">Admin Login</h1>
-                    </div>
-
-                    <form className="p-5 " onSubmit={logAdmin}>
-                        <div className="initials flex md:flex-row flex-col ml-23">
-                            <div className="flex flex-col mb-3">
-                                <label htmlFor="Email" className="text-xl mb-1">
-                                    Email:
-                                </label>
-                                <input
-                                    type="text"
-                                    name="Email"
-                                    id="Email"
-                                    placeholder="Enter Email"
-                                    className="w-full md:w-[300px] px-4 py-2 rounded-xl border"
-                                    required
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </div>
-
-                            <div className="flex flex-col ml-10">
-                                <label htmlFor="Password" className="text-xl mb-1">
-                                    Password:
-                                </label>
-                                <input
-                                    type="password"
-                                    name="Password"
-                                    id="Password"
-                                    placeholder="Enter Password Name"
-                                    className="w-full md:w-[300px] px-4 py-2 rounded-xl border"
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </div>
-
+                    <form onSubmit={logAdmin} className="flex flex-col gap-4">
+                        <div className="flex flex-col">
+                            <label htmlFor="Email" className="text-lg mb-1">Email</label>
+                            <input
+                                type="email"
+                                id="Email"
+                                placeholder="Enter Email"
+                                className="px-4 py-2 rounded-xl border text-black"
+                                required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)} />
                         </div>
+
+                        <div className="flex flex-col">
+                            <label htmlFor="Password" className="text-xl mb-1">Password</label>
+                            <input
+                                type="password"
+                                id="Password"
+                                placeholder="Enter Password"
+                                className="px-4 py-2 rounded-xl border text-black"
+                                required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)} />
+                        </div>
+
                         <span className={statusHolder}>{logStatus}</span>
 
-                        <div className="mt-20 flex justify-end">
-                            <Link to={'/dashboard'}
-                                type="submit"
-                                className="px-6 py-2 mx-2 rounded-xl text-lg bg-gray-600 text-white hover:bg-gradient-to-r hover:from-[#3b82f6] hover:to-[#8b5cf6] hover:text-white transition"
-                            >
-                                cancel
-                            </Link>
-
-                            <button
-                                type="submit"
-                                className="px-6 py-2 rounded-xl text-lg bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6] text-white font-bold hover:from-[#2563eb] hover:to-[#7c3aed] transition"
-                            >
-                                Login
-                            </button>
-
-                        </div>
+                        <button
+                            type="submit"
+                            className="mt-4 px-6 py-2 rounded-xl text-lg bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6] text-white font-bold hover:from-[#2563eb] hover:to-[#7c3aed] transition">
+                            Login
+                        </button>
                     </form>
                 </div>
             </div>
