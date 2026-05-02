@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('students', {
     id: {
       autoIncrement: true,
@@ -13,7 +13,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     email: {
       type: DataTypes.STRING(100),
-      allowNull: true
+      allowNull: true,
+      unique: true
     },
     password: {
       type: DataTypes.STRING(255),

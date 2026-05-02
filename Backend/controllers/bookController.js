@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const Book = models.books;
 const Student = models.students;
 
-const JWT_SECRET = 'your_secret_key_change_this';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const verifyAdmin = (req) => {
     const authHeader = req.headers.authorization;

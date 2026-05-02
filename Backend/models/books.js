@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('books', {
     id: {
       autoIncrement: true,
@@ -28,9 +28,18 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 1
     },
+    status: {
+      type: DataTypes.TINYINT,
+      allowNull: true,
+      defaultValue: 1
+    },
     assignedTo: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'students',
+        key: 'id'
+      }
     }
   }, {
     sequelize,

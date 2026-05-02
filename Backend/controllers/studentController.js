@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 const Book = models.books;
 const Student = models.students;
 
-const JWT_SECRET = 'your_secret_key_change_this'
+const JWT_SECRET = process.env.JWT_SECRET
 
 // Student Controller
 
@@ -39,7 +39,7 @@ const addStudent = async (req, res) => {
 
 };
 
-const updated = async (req, res) => {
+const updateStudent = async (req, res) => {
     const { id } = req.params;
     const { name, rollNo, marks } = req.body;
 
@@ -73,8 +73,8 @@ const updated = async (req, res) => {
             }
         );
 
-        const updated = await Student.findByPk(id);
-        res.json({ message: 'Student updated successfuly', updated });
+        const updateStudent = await Student.findByPk(id);
+        res.json({ message: 'Student updateStudent successfuly', updateStudent });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -172,7 +172,7 @@ const loginAdmin = async (req, res) => {
 
 module.exports = {
     addStudent,
-    updated,
+    updateStudent,
     findAllStudent,
     findById,
     deleteStudent,

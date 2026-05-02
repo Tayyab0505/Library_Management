@@ -3,7 +3,6 @@ const router = express.Router();
 
 const studentController = require('../controllers/studentController');
 const bookController = require('../controllers/bookController');
-
 // Admin Routes
 router.post('/loginAdmin', studentController.loginAdmin);
 router.put('/assign', bookController.assignBook);
