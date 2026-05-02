@@ -1,7 +1,12 @@
-const { Sequelize, where } = require('sequelize');
+const { Sequelize } = require('sequelize');
 const { models } = require('../models');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
 const Book = models.books;
 const Student = models.students;
+
+const JWT_SECRET = 'your_secret_key_change_this'
 
 // Student Controller
 
@@ -34,7 +39,7 @@ const addStudent = async (req, res) => {
 
 };
 
-const updateStudent = async (req, res) => {
+const updated = async (req, res) => {
     const { id } = req.params;
     const { name, rollNo, marks } = req.body;
 
@@ -54,7 +59,7 @@ const updateStudent = async (req, res) => {
             return res.status(200).json({ status: 200, message: "This roll number already exist" });
         };
 
-        let student = await Student.update(
+        await Student.update(
             {
                 name,
                 rollNo,
@@ -68,10 +73,8 @@ const updateStudent = async (req, res) => {
             }
         );
 
-        if (student) {
-            const updateStudent = await Student.findByPk(id);
-            res.json({ message: 'Student updated successfuly', updateStudent });
-        };
+        const updated = await Student.findByPk(id);
+        res.json({ message: 'Student updated successfuly', updated });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -93,7 +96,7 @@ const findAllStudent = async (req, res) => {
         res.json(students);
     } catch (error) {
         res.status(500).json({ error: error.message });
-    };
+    };  
 };
 
 const findById = async (req, res) => {
@@ -146,9 +149,6 @@ const loginAdmin = async (req, res) => {
             where: { email, roleId: 1 },
         });
 
-        // if (!admin) {
-        //     return res.status(404).json({ message: "Admin not found" });
-        // }
         if (!admin) {
             return res.status(200).json({ message: "You are not authorised" });
         }
@@ -156,9 +156,15 @@ const loginAdmin = async (req, res) => {
         if (admin.password !== password) {
             return res.status(200).json({ message: "Incorrect password" });
         }
-        else {
-            res.status(200).json({ message: "Welcome Admin", admin });
-        }
+
+        const token = jwt.sign(
+            { id: admin.id, email: admin.email, role: 'admin' },
+            JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.status(200).json({ message: 'Welcome Admin', token, email: admin.email });
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     };
@@ -166,7 +172,7 @@ const loginAdmin = async (req, res) => {
 
 module.exports = {
     addStudent,
-    updateStudent,
+    updated,
     findAllStudent,
     findById,
     deleteStudent,

@@ -1,0 +1,20 @@
+# Backend
+Backend/node_modules/
+Backend/package-lock.json
+Backend/package.json
+
+# Frontend
+Frontend/node_modules/
+Frontend/package-lock.json
+
+# Common
+.DS_Store
+Thumbs.db
+.env
+dist/
+build/
+*.json
+*.json
+*.json
+Backend/package-lock.json
+Backend/package-lock.json

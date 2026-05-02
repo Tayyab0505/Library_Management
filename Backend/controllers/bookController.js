@@ -1,7 +1,25 @@
-const { Sequelize, where } = require('sequelize');
 const { models } = require('../models');
-const Student = models.students;
+const jwt = require('jsonwebtoken');
+
 const Book = models.books;
+const Student = models.students;
+
+const JWT_SECRET = 'your_secret_key_change_this';
+
+const verifyAdmin = (req) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return false;
+    }
+
+    const token = authHeader.split(' ')[1];
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        return decoded.role === 'admin';
+    } catch (error) {
+        return false;
+    }
+}
 
 const addBook = async (req, res) => {
     try {
@@ -29,8 +47,7 @@ const addBook = async (req, res) => {
 const findAllBook = async (req, res) => {
     try {
         let books = await Book.findAll({
-            where: { isActive: 1, },
-
+            where: { isActive: 1 },
         });
         res.status(200).json(books);
     } catch (error) {
@@ -107,25 +124,17 @@ const deleteBook = async (req, res) => {
 }
 
 const assignBook = async (req, res) => {
-    const { bookId, studentId, email } = req.body;
+
+    if (!verifyAdmin(req)) {
+        return res.status(403).json({ message: "You are not authorized" });
+    }
+
+    const { bookId, studentId } = req.body;
 
     try {
         const book = await Book.findByPk(bookId);
 
-        // if (roleId !== true) {
-        //     return res.status(403).json({ message: "Only Admin can perform this action" });
-        // }
-
-        const admin = await Student.findOne({ where: { email, roleId: 1 } });
-        if (!admin) {
-            return res.status(403).json({ message: "You are not authorized" });
-        }
-
-        // if (req.body.email !== "admin@gmail.com") {
-        //     return res.status(403).json({ message: "You are not authorized" });
-        // }
-
-        if (!book || book.isActive == false) {
+        if (!book || !book.isActive) {
             return res.status(404).json({ message: "Book not found or inactive" });
         }
 
@@ -151,25 +160,17 @@ const assignBook = async (req, res) => {
 }
 
 const unassignBook = async (req, res) => {
-    const { bookId, email } = req.body;
+
+    if (!verifyAdmin(req)) {
+        return res.status(403).json({ message: "You are not authorized" });
+    }
+
+    const { bookId } = req.body;
 
     try {
-        const admin = await Student.findOne({ where: { email, roleId: 1 } });
-        if (!admin) {
-            return res.status(403).json({ message: "You are not authorized" });
-        }
-
-        console.log("Book ID received:", bookId);
-
-
         const book = await Book.findByPk(bookId);
-        console.log("Book from DB:", book);
-        // if (req.body.email !== "admin@gmail.com") {
-        //     return res.status(403).json({ message: "You are not authorized" });
-        // }
-
         if (!book) {
-            return res.status(404).json({ message: "Book not found or inactive" });
+            return res.status(404).json({ message: "Book not found" });
         };
 
         await Book.update(
