@@ -14,6 +14,7 @@ const AuthPage = () => {
 
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('error');
+    const [checking, setChecking] = useState(true);
 
     const showMessage = (msg, type = 'error') => {
         setMessage(msg);
@@ -26,25 +27,31 @@ const AuthPage = () => {
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
         if (token) {
-            navigate(role === 'admin' ? '/dashboard' : '/student-dashboard');
+            navigate(role === 'admin' ? '/dashboard' : '/student-dashboard', { replace: true });
+        } else {
+            setChecking(false);
         }
     }, []);
+
+    if (checking) {
+        return null;
+    }
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             const res = await AdminLogin(loginData);
-            
+
             if (res.data.message === 'Welcome Admin') {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('role', 'admin');
                 localStorage.setItem('adminEmail', loginData.email);
-                navigate('/dashboard');
-            } 
+                navigate('/dashboard', { replace: true });
+            }
             else if (res.data.message === 'Welcome Student') {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('role', 'student');
-                navigate('/student-dashboard');
+                navigate('/student-dashboard', { replace: true });
             } else {
                 showMessage(res.data.message);
             }
@@ -72,7 +79,8 @@ const AuthPage = () => {
     return (
         <div style={{
             minHeight: '100vh', background: '#0d1b2e',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem'
+        }}>
             <div style={{ display: 'flex', gap: '3rem', width: '100%', maxWidth: '700px', alignItems: 'center' }}>
 
                 {/* Left branding */}
@@ -80,8 +88,9 @@ const AuthPage = () => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
                         <div style={{
                             width: '36px', height: '36px', background: '#185FA5',
-                            borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                
+                            borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                        }}>
+
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <rect x="3" y="2" width="10" height="13" rx="1.5" fill="white" opacity="0.9" />
                                 <rect x="7" y="5" width="10" height="13" rx="1.5" fill="#85B7EB" />

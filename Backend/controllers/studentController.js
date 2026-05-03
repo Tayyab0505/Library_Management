@@ -96,7 +96,7 @@ const findAllStudent = async (req, res) => {
         res.json(students);
     } catch (error) {
         res.status(500).json({ error: error.message });
-    };  
+    };
 };
 
 const findById = async (req, res) => {
@@ -145,25 +145,32 @@ const loginAdmin = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const admin = await Student.findOne({
-            where: { email, roleId: 1 },
+        const user = await Student.findOne({
+            where: { email, status: 1 },
         });
 
-        if (!admin) {
+        if (!user) {
             return res.status(200).json({ message: "You are not authorised" });
         }
 
-        if (admin.password !== password) {
+        if (user.password !== password) {
             return res.status(200).json({ message: "Incorrect password" });
         }
 
+        const role = user.roleId === 1 ? 'admin' : 'student';
+
         const token = jwt.sign(
-            { id: admin.id, email: admin.email, role: 'admin' },
+            { id: admin.id, email: user.email, role },
             JWT_SECRET,
             { expiresIn: '7d' }
         );
 
-        res.status(200).json({ message: 'Welcome Admin', token, email: admin.email });
+        res.status(200).json({
+            message: user.roleId === 1 ? 'Welcome Admin' : 'Welcome Student',
+            token,
+            email: user.email,
+            role
+        });
 
     } catch (err) {
         res.status(500).json({ error: err.message });

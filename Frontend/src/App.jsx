@@ -2,7 +2,6 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import AppLayout from './layout/AppLayout';
 import ProtectedRoute from './components/ui/ProtectedRoute';
 
-import LoginAdmin from './components/Admin/LoginAdmin';
 import Dashboard from './components/Admin/Dashboard';
 import AssignBook from './components/Admin/AssignBook';
 
@@ -15,15 +14,13 @@ import BookDashboard from './components/Book/BookDashboard';
 import AddBook from './components/Book/AddBook';
 import EditBook from './components/Book/EditBook';
 import ReadBook from './components/Book/ReadBook';
+import AuthPage from './components/Auth/AuthPage';
 
 const router = createBrowserRouter([
 
   // root redirect
   {
-    path: '/', element: <Navigate to='/login' />
-  },
-  {
-    path: '/login', element: <LoginAdmin />
+    path: '/', element: <AuthPage />
   },
 
   // Protected - All inside app layout
@@ -40,14 +37,6 @@ const router = createBrowserRouter([
       },
 
       // Admin Path
-      {
-        path: '/loginAdmin',
-        element: (
-          <AppLayout>
-            <LoginAdmin />
-          </AppLayout>
-        )
-      },
       {
         path: '/assignBook',
         element: (
