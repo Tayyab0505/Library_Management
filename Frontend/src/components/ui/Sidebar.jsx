@@ -21,8 +21,7 @@ export default function Sidebar() {
                     background: 'linear-gradient(to bottom, #000000, #0a192f, #0f172a)',
                     color: '#fff',
                 },
-            }}
-        >
+            }}>
 
             <Toolbar />
 
@@ -30,26 +29,15 @@ export default function Sidebar() {
                 <ListItemButton
                     component={Link}
                     to="/dashboard"
-                    sx={{ '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)', } }}
-                >
+                    sx={{ '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)', } }}>
                     <ListItemIcon sx={{ color: 'white', font: 'serif' }}><DashboardIcon /></ListItemIcon>
                     <ListItemText primary="Dashboard" />
                 </ListItemButton>
 
                 <ListItemButton
                     component={Link}
-                    to="/loginAdmin"
-                    sx={{ '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)', } }}
-                >
-                    <ListItemIcon sx={{ color: 'white', fontFamily: 'serif' }}><AdminPanelSettingsIcon /></ListItemIcon>
-                    <ListItemText primary="Admin" />
-                </ListItemButton>
-
-                <ListItemButton
-                    component={Link}
                     to="/students"
-                    sx={{ '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)', } }}
-                >
+                    sx={{ '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)', } }}>
                     <ListItemIcon sx={{ color: 'white', fontFamily: 'serif' }}><SchoolIcon /></ListItemIcon>
                     <ListItemText primary="Students" />
                 </ListItemButton>
@@ -57,8 +45,7 @@ export default function Sidebar() {
                 <ListItemButton
                     component={Link}
                     to="/books"
-                    sx={{ '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)', } }}
-                >
+                    sx={{ '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)', } }}>
                     <ListItemIcon sx={{ color: 'white', fontFamily: 'serif' }}><MenuBookIcon /></ListItemIcon>
                     <ListItemText primary="Books" />
                 </ListItemButton>
