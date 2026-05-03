@@ -13,6 +13,8 @@ API.interceptors.request.use((config) => {
 });
 
 export const AdminLogin = (data) => API.post("/loginAdmin", data);
+export const StudentSignup = (data) => API.post("/addStudent", data);
+
 export const assignBook = (bookId, studentId) => {
     const email = localStorage.getItem('adminEmail');
     return API.put("/assign", { bookId, studentId, email });

@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AdminLogin } from '../../api/AdminApi';
+import { AdminLogin, StudentSignup } from '../../api/AdminApi';
 
 const AuthPage = () => {
-
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('login');
 
     const [loginData, setLoginData] = useState({ email: '', password: '' });
+
+    const [signupData, setSignupData] = useState({
+        name: '', email: '', password: '', rollNo: '', marks: ''
+    });
 
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('error');
@@ -31,13 +34,13 @@ const AuthPage = () => {
         e.preventDefault();
         try {
             const res = await AdminLogin(loginData);
-
+            
             if (res.data.message === 'Welcome Admin') {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('role', 'admin');
                 localStorage.setItem('adminEmail', loginData.email);
                 navigate('/dashboard');
-            }
+            } 
             else if (res.data.message === 'Welcome Student') {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('role', 'student');
@@ -50,11 +53,26 @@ const AuthPage = () => {
         }
     };
 
+    const handleSignup = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await StudentSignup(signupData);
+            if (res.data.message === 'Data saved successfully') {
+                showMessage('Account created! Please login.', 'success');
+                setActiveTab('login');
+                setSignupData({ name: '', email: '', password: '', rollNo: '', marks: '' });
+            } else {
+                showMessage(res.data.message);
+            }
+        } catch {
+            showMessage('Signup failed. Please try again.');
+        }
+    };
+
     return (
         <div style={{
             minHeight: '100vh', background: '#0d1b2e',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem'
-        }}>
+            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
             <div style={{ display: 'flex', gap: '3rem', width: '100%', maxWidth: '700px', alignItems: 'center' }}>
 
                 {/* Left branding */}
@@ -62,8 +80,8 @@ const AuthPage = () => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
                         <div style={{
                             width: '36px', height: '36px', background: '#185FA5',
-                            borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center'
-                        }}>
+                            borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <rect x="3" y="2" width="10" height="13" rx="1.5" fill="white" opacity="0.9" />
                                 <rect x="7" y="5" width="10" height="13" rx="1.5" fill="#85B7EB" />
@@ -90,6 +108,7 @@ const AuthPage = () => {
                         </div>
                     ))}
                 </div>
+
                 {/* Auth card */}
                 <div style={{
                     background: '#152a4c', border: '0.5px solid #185FA5',
@@ -113,7 +132,7 @@ const AuthPage = () => {
                             </button>
                         ))}
                     </div>
-                    
+
                     {/* Error / success message */}
                     {message && (
                         <div style={{
@@ -127,10 +146,115 @@ const AuthPage = () => {
                             {message}
                         </div>
                     )}
-                </form>
+
+                    {/* LOGIN FORM */}
+                    {activeTab === 'login' && (
+                        <form onSubmit={handleLogin}>
+                            {[
+                                { label: 'Email address', key: 'email', type: 'email', placeholder: 'you@example.com' },
+                                { label: 'Password', key: 'password', type: 'password', placeholder: '••••••••' },
+                            ].map(({ label, key, type, placeholder }) => (
+                                <div key={key}>
+                                    <p style={{ fontSize: '12px', color: '#85B7EB', marginBottom: '5px' }}>{label}</p>
+                                    <input type={type} placeholder={placeholder} required
+                                        value={loginData[key]}
+                                        onChange={e => setLoginData({ ...loginData, [key]: e.target.value })}
+                                        style={{
+                                            width: '100%', background: '#0d1b2e', border: '0.5px solid #185FA5',
+                                            borderRadius: '8px', padding: '10px 14px', fontSize: '13px',
+                                            color: '#fff', marginBottom: '14px', outline: 'none'
+                                        }}
+                                    />
+                                </div>
+                            ))}
+                            <button type="submit" style={{
+                                width: '100%', background: '#185FA5', color: '#fff',
+                                border: 'none', borderRadius: '8px', padding: '11px',
+                                fontSize: '14px', fontWeight: '500', cursor: 'pointer', marginTop: '4px'
+                            }}>
+                                Login
+                            </button>
+                            <p style={{ textAlign: 'center', fontSize: '12px', color: '#85B7EB', marginTop: '1rem' }}>
+                                Don't have an account?{' '}
+                                <span onClick={() => setActiveTab('signup')}
+                                    style={{ color: '#378ADD', cursor: 'pointer', textDecoration: 'underline' }}>
+                                    Sign up
+                                </span>
+                            </p>
+                        </form>
+                    )}
+
+                    {/* SIGNUP FORM */}
+                    {activeTab === 'signup' && (
+                        <form onSubmit={handleSignup}>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                {[
+                                    { label: 'Full name', key: 'name', placeholder: 'Ali Hassan' },
+                                    { label: 'Roll no', key: 'rollNo', placeholder: 'CS-101' },
+                                ].map(({ label, key, placeholder }) => (
+                                    <div key={key} style={{ flex: 1 }}>
+                                        <p style={{ fontSize: '12px', color: '#85B7EB', marginBottom: '5px' }}>{label}</p>
+                                        <input placeholder={placeholder} required
+                                            value={signupData[key]}
+                                            onChange={e => setSignupData({ ...signupData, [key]: e.target.value })}
+                                            style={{
+                                                width: '100%', background: '#0d1b2e', border: '0.5px solid #185FA5',
+                                                borderRadius: '8px', padding: '10px 14px', fontSize: '13px',
+                                                color: '#fff', marginBottom: '14px', outline: 'none'
+                                            }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                            <p style={{ fontSize: '12px', color: '#85B7EB', marginBottom: '5px' }}>Email address</p>
+                            <input type="email" placeholder="you@example.com" required
+                                value={signupData.email}
+                                onChange={e => setSignupData({ ...signupData, email: e.target.value })}
+                                style={{
+                                    width: '100%', background: '#0d1b2e', border: '0.5px solid #185FA5',
+                                    borderRadius: '8px', padding: '10px 14px', fontSize: '13px',
+                                    color: '#fff', marginBottom: '14px', outline: 'none'
+                                }}
+                            />
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                {[
+                                    { label: 'Password', key: 'password', type: 'password', placeholder: '••••••••' },
+                                    { label: 'Marks', key: 'marks', type: 'number', placeholder: '85' },
+                                ].map(({ label, key, type, placeholder }) => (
+                                    <div key={key} style={{ flex: 1 }}>
+                                        <p style={{ fontSize: '12px', color: '#85B7EB', marginBottom: '5px' }}>{label}</p>
+                                        <input type={type || 'text'} placeholder={placeholder} required
+                                            value={signupData[key]}
+                                            onChange={e => setSignupData({ ...signupData, [key]: e.target.value })}
+                                            style={{
+                                                width: '100%', background: '#0d1b2e', border: '0.5px solid #185FA5',
+                                                borderRadius: '8px', padding: '10px 14px', fontSize: '13px',
+                                                color: '#fff', marginBottom: '14px', outline: 'none'
+                                            }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                            <button type="submit" style={{
+                                width: '100%', background: '#185FA5', color: '#fff',
+                                border: 'none', borderRadius: '8px', padding: '11px',
+                                fontSize: '14px', fontWeight: '500', cursor: 'pointer', marginTop: '4px'
+                            }}>
+                                Create account
+                            </button>
+                            <p style={{ textAlign: 'center', fontSize: '12px', color: '#85B7EB', marginTop: '1rem' }}>
+                                Already have an account?{' '}
+                                <span onClick={() => setActiveTab('login')}
+                                    style={{ color: '#378ADD', cursor: 'pointer', textDecoration: 'underline' }}>
+                                    Login
+                                </span>
+                            </p>
+                        </form>
+                    )}
+                </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default AuthPage
+export default AuthPage;
