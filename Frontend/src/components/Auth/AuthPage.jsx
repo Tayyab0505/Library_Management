@@ -198,8 +198,8 @@ const AuthPage = () => {
                         <form onSubmit={handleSignup}>
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 {[
-                                    { label: 'Full name', key: 'name', placeholder: 'Ali Hassan' },
-                                    { label: 'Roll no', key: 'rollNo', placeholder: 'CS-101' },
+                                    { label: 'Full name', key: 'name', placeholder: 'Your Name' },
+                                    { label: 'Roll no', key: 'rollNo', placeholder: '123' },
                                 ].map(({ label, key, placeholder }) => (
                                     <div key={key} style={{ flex: 1 }}>
                                         <p style={{ fontSize: '12px', color: '#85B7EB', marginBottom: '5px' }}>{label}</p>
@@ -228,7 +228,7 @@ const AuthPage = () => {
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 {[
                                     { label: 'Password', key: 'password', type: 'password', placeholder: '••••••••' },
-                                    { label: 'Marks', key: 'marks', type: 'number', placeholder: '85' },
+                                    { label: 'Marks', key: 'marks', type: 'number', placeholder: 'Your Marks' },
                                 ].map(({ label, key, type, placeholder }) => (
                                     <div key={key} style={{ flex: 1 }}>
                                         <p style={{ fontSize: '12px', color: '#85B7EB', marginBottom: '5px' }}>{label}</p>
