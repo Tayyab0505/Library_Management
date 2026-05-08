@@ -1,11 +1,56 @@
-import { Grid, Paper, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getDashboardStats } from '../../api/AdminApi';
+import SchoolIcon from '@mui/icons-material/School';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+
+const statConfig = [
+    {
+        key: 'totalStudents',
+        label: 'Total Students',
+        icon: <SchoolIcon sx={{ fontSize: 28 }} />,
+        color: '#2563EB',
+        bg: '#EFF6FF',
+        border: '#BFDBFE',
+    },
+    {
+        key: 'totalBooks',
+        label: 'Total Books',
+        icon: <MenuBookIcon sx={{ fontSize: 28 }} />,
+        color: '#059669',
+        bg: '#ECFDF5',
+        border: '#A7F3D0',
+    },
+    {
+        key: 'assignedBooks',
+        label: 'Assigned Books',
+        icon: <AssignmentIcon sx={{ fontSize: 28 }} />,
+        color: '#D97706',
+        bg: '#FFFBEB',
+        border: '#FDE68A',
+    },
+];
 
 const Dashboard = () => {
-    const stats = [
-        { label: 'Total Students', value: 150 },
-        { label: 'Total Books', value: 200 },
-        { label: 'Assigned Books', value: 45 },
-    ];
+    const navigate = useNavigate();
+    const [stats, setStats] = useState({ totalStudents: 0, totalBooks: 0, assignedBooks: 0 });
+    const [loading, setLoading] = useState(true);
+    const adminEmail = localStorage.getItem('adminEmail') || 'Admin';
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const res = await getDashboardStats();
+                setStats(res.data);
+            } catch (err) {
+                console.error('Failed to load stats:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchStats();
+    }, []);
 
     return (
         <div className="bg-[rgb(245,246,250)] min-h-screen p-6 font-serif">
