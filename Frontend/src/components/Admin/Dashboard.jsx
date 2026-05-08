@@ -9,26 +9,26 @@ const statConfig = [
     {
         key: 'totalStudents',
         label: 'Total Students',
-        icon: <SchoolIcon sx={{ fontSize: 28 }} />,
-        color: '#2563EB',
-        bg: '#EFF6FF',
-        border: '#BFDBFE',
+        icon: <SchoolIcon />,
+        color: 'text-blue-600',
+        bg: 'bg-blue-50',
+        border: 'border-l-blue-600',
     },
     {
         key: 'totalBooks',
         label: 'Total Books',
-        icon: <MenuBookIcon sx={{ fontSize: 28 }} />,
-        color: '#059669',
-        bg: '#ECFDF5',
-        border: '#A7F3D0',
+        icon: <MenuBookIcon />,
+        color: 'text-emerald-600',
+        bg: 'bg-emerald-50',
+        border: 'border-l-emerald-600',
     },
     {
         key: 'assignedBooks',
         label: 'Assigned Books',
-        icon: <AssignmentIcon sx={{ fontSize: 28 }} />,
-        color: '#D97706',
-        bg: '#FFFBEB',
-        border: '#FDE68A',
+        icon: <AssignmentIcon />,
+        color: 'text-amber-600',
+        bg: 'bg-amber-50',
+        border: 'border-l-amber-600',
     },
 ];
 
@@ -53,29 +53,59 @@ const Dashboard = () => {
     }, []);
 
     return (
-        <div className="bg-[rgb(245,246,250)] min-h-screen p-6 font-serif">
-
-            <div className="bg-[#152a4c] bg-opacity-90 p-10 rounded-md shadow-md max-w-7xl mx-auto mb-10">
-                <h2 className="text-4xl font-bold text-center text-white font-serif">Admin Dashboard</h2>
-                <p className="text-center text-white mt-4 font-serif">
-                    Welcome to the admin panel. Use the sidebar to manage students and books.
-                </p>
+        <div className="bg-[#F5F6FA] min-h-screen p-6 font-serif">
+            <div className="bg-gradient-to-r from-[#1E3A5F] to-[#2563EB] rounded-2xl p-10 mb-8 flex justify-between items-center">
+                <div>
+                    <h2 className="text-white text-3xl font-bold m-0">Welcome back, Admin</h2>
+                    <p className="text-white/75 mt-2 text-sm">
+                        {adminEmail} — here's what's happening in your library today.
+                    </p>
+                </div>
+                <div className="bg-white/15 rounded-xl px-5 py-3 text-white text-sm text-center">
+                    <div className="text-xs opacity-75 mb-1">Today</div>
+                    <div className="font-semibold">
+                        {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                    </div>
+                </div>
             </div>
 
-            <div className="max-w-7xl mx-auto">
-                <Grid container spacing={2}>
-                    {stats.map((stat, index) => (
-                        <Grid item xs={12} sm={4} key={index}>
-                            <Paper sx={{ p: 2, textAlign: 'center', }}>
-                                <Typography variant="h6">{stat.label}</Typography>
-                                <Typography variant="h4">{stat.value}</Typography>
-                            </Paper>
-                        </Grid>
+            {/* Stat cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+                {statConfig.map(({ key, label, icon, color, bg, border }) => (
+                    <div key={key} className={`bg-white rounded-2xl p-6 border border-gray-100 border-l-4 ${border} flex items-center gap-4 shadow-sm`} >
+                        <div className={`${bg} ${color} rounded-xl p-3 flex items-center justify-center`}>
+                            {icon}
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500 m-0">{label}</p>
+                            <p className="text-4xl font-bold text-gray-900 m-0 leading-tight">
+                                {loading ? '—' : stats[key]}
+                            </p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* actions */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                <h3 className="text-base font-semibold text-gray-800 mb-4">
+                    Quick actions
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                    {[
+                        { label: 'Add student', path: '/addStudent', style: 'border-blue-600 text-blue-600 hover:bg-blue-600' },
+                        { label: 'Add book', path: '/addBook', style: 'border-emerald-600 text-emerald-600 hover:bg-emerald-600' },
+                        { label: 'Assign book', path: '/assignBook', style: 'border-amber-600 text-amber-600 hover:bg-amber-600' },
+                    ].map(({ label, path, style }) => (
+                        <button key={path} onClick={() => navigate(path)}
+                            className={`px-5 py-2.5 rounded-xl border-2 font-medium text-sm bg-white hover:text-white transition-colors duration-200 ${style}`}>
+                            {label}
+                        </button>
                     ))}
-                </Grid>
+                </div>
             </div>
         </div>
     );
-}
+};
 
-export default Dashboard
+export default Dashboard;
