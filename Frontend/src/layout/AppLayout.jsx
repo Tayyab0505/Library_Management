@@ -1,4 +1,3 @@
-// src/layout/AppLayout.jsx
 import { Box } from '@mui/material';
 import Sidebar from '../components/ui/Sidebar';
 import Topbar from '../components/ui/Topbar';

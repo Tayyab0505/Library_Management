@@ -1,4 +1,3 @@
-// src/theme/ThemeProvider.jsx
 import { createTheme, ThemeProvider, CssBaseline } from '@mui/material';
 import { useState, createContext, useMemo } from 'react';
 

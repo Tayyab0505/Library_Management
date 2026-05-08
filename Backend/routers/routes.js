@@ -7,6 +7,7 @@ const bookController = require('../controllers/bookController');
 router.post('/loginAdmin', studentController.loginAdmin);
 router.put('/assign', bookController.assignBook);
 router.put('/unAssign', bookController.unassignBook);
+router.get('/stats', studentController.getStats);
 
 // Student Routes
 

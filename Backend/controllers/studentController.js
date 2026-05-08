@@ -160,7 +160,7 @@ const loginAdmin = async (req, res) => {
         const role = user.roleId === 1 ? 'admin' : 'student';
 
         const token = jwt.sign(
-            { id: admin.id, email: user.email, role },
+            { id: user.id, email: user.email, role },
             JWT_SECRET,
             { expiresIn: '7d' }
         );
@@ -177,11 +177,26 @@ const loginAdmin = async (req, res) => {
     };
 };
 
+const getStats = async (req, res) => {
+    try {
+        const totalStudents = await Student.count({ where: { status: 1, roleId: 2 } });
+        const totalBooks = await Book.count({ where: { isActive: 1 } });
+        const assignedBooks = await Book.count({
+            where: { isActive: 1, assignedTo: { [Sequelize.Op.ne]: null } }
+        });
+
+        res.status(200).json({ totalStudents, totalBooks, assignedBooks });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    };
+};
+
 module.exports = {
     addStudent,
     updateStudent,
     findAllStudent,
     findById,
     deleteStudent,
-    loginAdmin
+    loginAdmin,
+    getStats
 };
