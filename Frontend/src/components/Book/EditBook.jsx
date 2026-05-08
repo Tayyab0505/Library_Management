@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { data, Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { findByID, updateBook } from '../../api/BookApi';
 import "../../App.css";
 

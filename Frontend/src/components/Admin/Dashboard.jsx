@@ -98,7 +98,7 @@ const Dashboard = () => {
                         { label: 'Assign book', path: '/assignBook', style: 'border-amber-600 text-amber-600 hover:bg-amber-600' },
                     ].map(({ label, path, style }) => (
                         <button key={path} onClick={() => navigate(path)}
-                            className={`px-5 py-2.5 rounded-xl border-2 font-medium text-sm bg-white hover:text-white transition-colors duration-200 ${style}`}>
+                            className={`px-5 cursor-pointer py-2.5 rounded-xl border-2 font-medium text-sm bg-white hover:text-white transition-colors duration-200 ${style}`}>
                             {label}
                         </button>
                     ))}
