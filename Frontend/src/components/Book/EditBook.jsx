@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { findByID, updateBook } from '../../api/BookApi';
-import "../../App.css";
 
 const EditBook = () => {
     const { id } = useParams();

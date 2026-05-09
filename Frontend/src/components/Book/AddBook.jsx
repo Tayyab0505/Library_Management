@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { addBook } from '../../api/BookApi';
-import "../../App.css";
 
 const AddBook = () => {
 
