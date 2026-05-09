@@ -6,7 +6,6 @@ import Dashboard from './components/Admin/Dashboard';
 import AssignBook from './components/Admin/AssignBook';
 
 import StudentDashboard from './components/Student/StudentDashboard';
-import AddStudent from './components/Student/AddStudent';
 import EditStudent from './components/Student/EditStudent';
 import ReadStudent from './components/Student/ReadStudent';
 
@@ -52,14 +51,6 @@ const router = createBrowserRouter([
         element: (
           <AppLayout>
             <StudentDashboard />
-          </AppLayout>
-        )
-      },
-      {
-        path: '/addStudent',
-        element: (
-          <AppLayout>
-            <AddStudent />
           </AppLayout>
         )
       },

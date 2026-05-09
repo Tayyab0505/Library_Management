@@ -1,146 +1,92 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { editStudent, findById } from '../../api/StudentApi';
 
 const EditStudent = () => {
-
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const [name, setName] = useState('');
-    const [rollNo, setRollNo] = useState('');
-    const [marks, setMarks] = useState('');
-
-    const [logStatus, setLogStatus] = useState('');
-    const [statusHolder, setStatusHolder] = useState('message');
+    const [form, setForm] = useState({ name: '', rollNo: '', marks: '' });
+    const [message, setMessage] = useState('');
+    const [isError, setIsError] = useState(false);
 
     useEffect(() => {
         findById(id)
-            .then(res => {
-                setName(res.data.name);
-                setRollNo(res.data.rollNo);
-                setMarks(res.data.marks);
-            }).catch(err => {
+            .then(res => setForm({
+                name: res.data.name,
+                rollNo: res.data.rollNo,
+                marks: res.data.marks
+            }))
+            .catch(err => {
                 console.error("Failed to fetch student:", err);
             });
     }, [id]);
 
-    const handleUpdate = (e) => {
-        e.preventDefault();
-
-        const updatedStudent = {
-            name,
-            rollNo,
-            marks: parseInt(marks)
-        };
-
-        editStudent(id, updatedStudent)
-            .then((res) => {
-                if (res.data.message === 'This roll number already exist') {
-                    setLogStatus(res.data.message);
-                } else if (res.data.message === 'Student updated successfuly') {
-                    setLogStatus(res.data.message);
-                    navigate('/students')
-                };
-            }).catch(err => {
-                console.error("Failed to update:", err);
-            });
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value })
     };
 
-    useEffect(() => {
-        if (logStatus !== '') {
-            setStatusHolder('showMessage');
-            const timer = setTimeout(() => {
-                setStatusHolder('message');
-                setLogStatus('');
-            }, 4000);
-            return () => clearTimeout(timer);
-        }
-    }, [logStatus]);
+    const handleUpdate = async (e) => {
+        e.preventDefault();
 
+        try {
+            const res = await editStudent(id, { ...form, marks: parseInt(form.marks) });
+            if (res.data.message === 'Student updated successfuly') {
+                setIsError(false);
+                setMessage('Student updated successfully!');
+                setTimeout(() => navigate('/students'), 1500);
+            } else {
+                setIsError(true);
+                setMessage(res.data.message);
+            }
+        } catch {
+            setIsError(true);
+            setMessage('Something went wrong.');
+        }
+    };
+
+    const fields = [
+        { label: 'Full Name', name: 'name', type: 'text', placeholder: 'Ali Hassan' },
+        { label: 'Roll No', name: 'rollNo', type: 'text', placeholder: 'CS-101' },
+        { label: 'Marks', name: 'marks', type: 'number', placeholder: '85' },
+    ];
 
     return (
-        <>
-            <div className="hero min-h-screen bg-[rgb(245,246,250)] overflow-y-auto py-10 px-4 flex items-start justify-center">
-                <div className="w-full sm:w-[90%] lg:w-[96%] bg-gray-800 text-white rounded-lg shadow-lg">
-                    <div className="heading text-center">
-                        <h1 className="my-5 text-3xl font-serif text-[#60a5fa] sm:text-4xl font-bold">Update Student</h1>
-                    </div>
+        <div className="min-h-screen bg-[#F5F6FA] p-6 font-serif">
+            <div className="max-w-2xl mx-auto">
 
-                    <form className="p-5" onSubmit={handleUpdate}>
-                        <div className="initials flex md:flex-row flex-col justify-evenly gap-4">
-                            <div className="flex flex-col mb-3">
-                                <label htmlFor="full-name" className="text-xl mb-1">
-                                    Full Name:
-                                </label>
-                                <input
-                                    type="text"
-                                    name="full-name"
-                                    id="full-name"
-                                    placeholder="Name"
-                                    className="w-full md:w-[300px] px-4 py-2 rounded-xl border"
-                                    required
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                />
-                            </div>
+                <div className="mb-6">
+                    <h1 className="text-2xl font-bold text-gray-800">Edit Student</h1>
+                    <p className="text-sm text-gray-500 mt-0.5">Update the student's information below</p>
+                </div>
 
-                            <div className="flex flex-col mb-3">
-                                <label htmlFor="roll-no" className="text-xl mb-1">
-                                    Roll No:
-                                </label>
-                                <input
-                                    type="text"
-                                    name="roll-no"
-                                    id="roll-no"
-                                    placeholder="Roll Number"
-                                    className="w-full md:w-[300px] px-4 py-2 rounded-xl border"
-                                    required
-                                    value={rollNo}
-                                    onChange={(e) => setRollNo(e.target.value)}
-                                />
-                            </div>
-
-                            <div className="flex flex-col mb-3">
-                                <label htmlFor="marks" className="text-xl mb-1">
-                                    Marks:
-                                </label>
-                                <input
-                                    type="number"
-                                    name="marks"
-                                    id="marks"
-                                    placeholder="Marks"
-                                    className="w-full md:w-[300px] px-4 py-2 rounded-xl border"
-                                    required
-                                    value={marks}
-                                    onChange={(e) => setMarks(e.target.value)}
-                                />
-                            </div>
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    {message && (
+                        <div className={`mb-4 px-4 py-3 rounded-xl text-sm font-medium ${isError ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-emerald-50 text-emerald-600 border border-emerald-200'}`}>
+                            {message}
                         </div>
+                    )}
 
-                        <span className={statusHolder}>{logStatus}</span>
+                    <form onSubmit={handleUpdate} className="flex flex-col gap-4">
+                        {fields.map(({ label, name, type, placeholder }) => (
+                            <div key={name}>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
 
-                        <div className="mt-6 flex justify-end">
-                            <Link to={'/students'}
-                                type="submit"
-                                className="px-6 py-2 mx-2 rounded-xl text-lg bg-gray-600 text-white hover:bg-gradient-to-r hover:from-[#3b82f6] hover:to-[#8b5cf6] hover:text-white transition"
-                            >
-                                Cancel
-                            </Link>
+                                <input type={type} name={name} placeholder={placeholder} required
+                                    value={form[name]} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" />
+                            </div>
+                        ))}
 
-                            <button
-                                type="submit"
-                                className="px-6 py-2 rounded-xl text-lg bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6] text-white font-bold hover:from-[#2563eb] hover:to-[#7c3aed] transition"
-                            >
-                                Update
-                            </button>
-
+                        <div className="flex justify-end gap-3 mt-2">
+                            <Link to="/students" className="px-5 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition"> Cancel </Link>
+                            <button type="submit" className="px-5 py-2.5 rounded-xl text-sm font-medium bg-amber-500 text-white hover:bg-amber-600 transition">Update Student</button>
                         </div>
                     </form>
                 </div>
             </div>
-        </>
+        </div>
     );
-}
+};
+
 
 export default EditStudent
