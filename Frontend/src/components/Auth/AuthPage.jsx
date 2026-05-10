@@ -5,13 +5,8 @@ import { AdminLogin, StudentSignup } from '../../api/AdminApi';
 const AuthPage = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('login');
-
     const [loginData, setLoginData] = useState({ email: '', password: '' });
-
-    const [signupData, setSignupData] = useState({
-        name: '', email: '', password: '', rollNo: '', marks: ''
-    });
-
+    const [signupData, setSignupData] = useState({ name: '', email: '', password: '', rollNo: '' });
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('error');
     const [checking, setChecking] = useState(true);
@@ -22,7 +17,6 @@ const AuthPage = () => {
         setTimeout(() => setMessage(''), 2000);
     };
 
-    // If already logged in, redirect
     useEffect(() => {
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
@@ -52,7 +46,8 @@ const AuthPage = () => {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('role', 'student');
                 navigate('/student-dashboard', { replace: true });
-            } else {
+            }
+            else {
                 showMessage(res.data.message);
             }
         } catch {
@@ -67,8 +62,9 @@ const AuthPage = () => {
             if (res.data.message === 'Data saved successfully') {
                 showMessage('Account created! Please login.', 'success');
                 setActiveTab('login');
-                setSignupData({ name: '', email: '', password: '', rollNo: '', marks: '' });
-            } else {
+                setSignupData({ name: '', email: '', password: '', rollNo: '' });
+            }
+            else {
                 showMessage(res.data.message);
             }
         } catch {
@@ -76,21 +72,17 @@ const AuthPage = () => {
         }
     };
 
+    const inputClass = "w-full bg-[#0d1b2e] border border-[#185FA5] rounded-xl px-4 py-2.5 text-sm text-white mb-3.5 outline-none focus:border-[#378ADD] placeholder:text-[#378ADD]/40";
+    const labelClass = "block text-xs text-[#85B7EB] mb-1";
+
     return (
-        <div style={{
-            minHeight: '100vh', background: '#0d1b2e',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem'
-        }}>
-            <div style={{ display: 'flex', gap: '3rem', width: '100%', maxWidth: '700px', alignItems: 'center' }}>
+        <div className="min-h-screen bg-[#0d1b2e] flex items-center justify-center p-8">
+            <div className="flex gap-12 w-full max-w-[700px] items-center">
 
                 {/* Left branding */}
-                <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                        <div style={{
-                            width: '36px', height: '36px', background: '#185FA5',
-                            borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center'
-                        }}>
-
+                <div className="flex-1">
+                    <div className="flex items-center gap-2.5 mb-2">
+                        <div className="w-9 h-9 bg-[#185FA5] rounded-lg flex items-center justify-center shrink-0">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <rect x="3" y="2" width="10" height="13" rx="1.5" fill="white" opacity="0.9" />
                                 <rect x="7" y="5" width="10" height="13" rx="1.5" fill="#85B7EB" />
@@ -98,60 +90,51 @@ const AuthPage = () => {
                                 <rect x="9" y="11" width="4" height="1.5" rx="0.75" fill="white" />
                             </svg>
                         </div>
-                        <span style={{ fontSize: '20px', fontWeight: '500', color: '#fff' }}>
-                            Library Management
-                        </span>
+                        <span className="text-xl font-medium text-white">Library Management</span>
                     </div>
-                    <p style={{ fontSize: '13px', color: '#85B7EB', marginBottom: '2rem' }}>
+
+                    <p className="text-xs text-[#85B7EB] mb-8">
                         Smart library system for admins and students
                     </p>
+
                     {[
                         'Admin manages books and students',
                         'Students browse and borrow books',
                         'Role-based access automatically',
                         'Track assignments and due dates',
                     ].map((f, i) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                            <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#378ADD', flexShrink: 0 }} />
-                            <span style={{ fontSize: '13px', color: '#B5D4F4' }}>{f}</span>
+                        <div key={i} className="flex items-center gap-2.5 mb-3">
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#378ADD] shrink-0" />
+                            <span className="text-sm text-[#B5D4F4]">{f}</span>
                         </div>
                     ))}
                 </div>
 
                 {/* Auth card */}
-                <div style={{
-                    background: '#152a4c', border: '0.5px solid #185FA5',
-                    borderRadius: '16px', padding: '2rem', width: '340px', flexShrink: 0
-                }}>
+                <div className="bg-[#152a4c] border border-[#185FA5]/50 rounded-2xl p-8 w-[340px] shrink-0">
+
                     {/* Tabs */}
-                    <div style={{
-                        display: 'flex', background: '#0d1b2e',
-                        borderRadius: '10px', padding: '4px', marginBottom: '1.5rem'
-                    }}>
+                    <div className="flex bg-[#0d1b2e] rounded-xl p-1 mb-6">
                         {['login', 'signup'].map(tab => (
-                            <button key={tab} onClick={() => { setActiveTab(tab); setMessage(''); }}
-                                style={{
-                                    flex: 1, padding: '8px', fontSize: '13px', border: 'none', cursor: 'pointer',
-                                    borderRadius: '8px', transition: 'background 0.2s',
-                                    background: activeTab === tab ? '#185FA5' : 'transparent',
-                                    color: activeTab === tab ? '#fff' : '#85B7EB',
-                                    fontWeight: activeTab === tab ? '500' : '400'
-                                }}>
+                            <button
+                                key={tab} onClick={() => { setActiveTab(tab); setMessage(''); }}
+                                className={`flex-1 py-2 text-sm rounded-lg cursor-pointer transition-all duration-200 border-none
+                                    ${activeTab === tab
+                                        ? 'bg-[#185FA5] text-white font-medium'
+                                        : 'bg-transparent text-[#85B7EB]'
+                                    }`} >
                                 {tab === 'login' ? 'Login' : 'Sign up'}
                             </button>
                         ))}
                     </div>
 
-                    {/* Error / success message */}
+                    {/* Message */}
                     {message && (
-                        <div style={{
-                            background: messageType === 'error' ? '#1a0a0a' : '#0a1a0a',
-                            border: `0.5px solid ${messageType === 'error' ? '#A32D2D' : '#3B6D11'}`,
-                            borderRadius: '6px', padding: '8px 12px',
-                            fontSize: '12px',
-                            color: messageType === 'error' ? '#F09595' : '#97C459',
-                            marginBottom: '12px'
-                        }}>
+                        <div className={`mb-4 px-3 py-2.5 rounded-xl text-xs font-medium border
+                            ${messageType === 'error'
+                                ? 'bg-[#1a0a0a] border-[#A32D2D] text-[#F09595]'
+                                : 'bg-[#0a1a0a] border-[#3B6D11] text-[#97C459]'
+                            }`}>
                             {message}
                         </div>
                     )}
@@ -159,34 +142,25 @@ const AuthPage = () => {
                     {/* LOGIN FORM */}
                     {activeTab === 'login' && (
                         <form onSubmit={handleLogin}>
-                            {[
-                                { label: 'Email address', key: 'email', type: 'email', placeholder: 'you@example.com' },
-                                { label: 'Password', key: 'password', type: 'password', placeholder: '••••••••' },
-                            ].map(({ label, key, type, placeholder }) => (
-                                <div key={key}>
-                                    <p style={{ fontSize: '12px', color: '#85B7EB', marginBottom: '5px' }}>{label}</p>
-                                    <input type={type} placeholder={placeholder} required
-                                        value={loginData[key]}
-                                        onChange={e => setLoginData({ ...loginData, [key]: e.target.value })}
-                                        style={{
-                                            width: '100%', background: '#0d1b2e', border: '0.5px solid #185FA5',
-                                            borderRadius: '8px', padding: '10px 14px', fontSize: '13px',
-                                            color: '#fff', marginBottom: '14px', outline: 'none'
-                                        }}
-                                    />
-                                </div>
-                            ))}
-                            <button type="submit" style={{
-                                width: '100%', background: '#185FA5', color: '#fff',
-                                border: 'none', borderRadius: '8px', padding: '11px',
-                                fontSize: '14px', fontWeight: '500', cursor: 'pointer', marginTop: '4px'
-                            }}>
+                            <label className={labelClass}>Email address</label>
+                            <input type="email" placeholder="you@example.com" required value={loginData.email}
+                                onChange={e => setLoginData({ ...loginData, email: e.target.value })}
+                                className={inputClass} />
+
+                            <label className={labelClass}>Password</label>
+                            <input type="password" placeholder="••••••••" required value={loginData.password}
+                                onChange={e => setLoginData({ ...loginData, password: e.target.value })}
+                                className={inputClass} />
+
+                            <button type="submit"
+                                className="w-full bg-[#185FA5] hover:bg-[#1a6db8] text-white text-sm font-medium py-2.5 rounded-xl mt-1 cursor-pointer transition-colors border-none">
                                 Login
                             </button>
-                            <p style={{ textAlign: 'center', fontSize: '12px', color: '#85B7EB', marginTop: '1rem' }}>
+
+                            <p className="text-center text-xs text-[#85B7EB] mt-4">
                                 Don't have an account?{' '}
                                 <span onClick={() => setActiveTab('signup')}
-                                    style={{ color: '#378ADD', cursor: 'pointer', textDecoration: 'underline' }}>
+                                    className="text-[#378ADD] underline cursor-pointer">
                                     Sign up
                                 </span>
                             </p>
@@ -196,65 +170,32 @@ const AuthPage = () => {
                     {/* SIGNUP FORM */}
                     {activeTab === 'signup' && (
                         <form onSubmit={handleSignup}>
-                            <div style={{ display: 'flex', gap: '10px' }}>
-                                {[
-                                    { label: 'Full name', key: 'name', placeholder: 'Your Name' },
-                                    { label: 'Roll no', key: 'rollNo', placeholder: '123' },
-                                ].map(({ label, key, placeholder }) => (
-                                    <div key={key} style={{ flex: 1 }}>
-                                        <p style={{ fontSize: '12px', color: '#85B7EB', marginBottom: '5px' }}>{label}</p>
-                                        <input placeholder={placeholder} required
-                                            value={signupData[key]}
-                                            onChange={e => setSignupData({ ...signupData, [key]: e.target.value })}
-                                            style={{
-                                                width: '100%', background: '#0d1b2e', border: '0.5px solid #185FA5',
-                                                borderRadius: '8px', padding: '10px 14px', fontSize: '13px',
-                                                color: '#fff', marginBottom: '14px', outline: 'none'
-                                            }}
-                                        />
-                                    </div>
-                                ))}
+                            <div className="flex gap-2.5">
+                                <div className="flex-1">
+                                    <label className={labelClass}>Full name</label>
+                                    <input placeholder="Your Name" required value={signupData.name}
+                                        onChange={e => setSignupData({ ...signupData, name: e.target.value })}
+                                        className={inputClass} />
+                                </div>
+                                <div className="flex-1">
+                                    <label className={labelClass}>Roll no</label>
+                                    <input placeholder="Roll No" required value={signupData.rollNo}
+                                        onChange={e => setSignupData({ ...signupData, rollNo: e.target.value })}
+                                        className={inputClass} />
+                                </div>
                             </div>
-                            <p style={{ fontSize: '12px', color: '#85B7EB', marginBottom: '5px' }}>Email address</p>
-                            <input type="email" placeholder="you@example.com" required
-                                value={signupData.email}
-                                onChange={e => setSignupData({ ...signupData, email: e.target.value })}
-                                style={{
-                                    width: '100%', background: '#0d1b2e', border: '0.5px solid #185FA5',
-                                    borderRadius: '8px', padding: '10px 14px', fontSize: '13px',
-                                    color: '#fff', marginBottom: '14px', outline: 'none'
-                                }}
-                            />
-                            <div style={{ display: 'flex', gap: '10px' }}>
-                                {[
-                                    { label: 'Password', key: 'password', type: 'password', placeholder: '••••••••' },
-                                    { label: 'Marks', key: 'marks', type: 'number', placeholder: 'Your Marks' },
-                                ].map(({ label, key, type, placeholder }) => (
-                                    <div key={key} style={{ flex: 1 }}>
-                                        <p style={{ fontSize: '12px', color: '#85B7EB', marginBottom: '5px' }}>{label}</p>
-                                        <input type={type || 'text'} placeholder={placeholder} required
-                                            value={signupData[key]}
-                                            onChange={e => setSignupData({ ...signupData, [key]: e.target.value })}
-                                            style={{
-                                                width: '100%', background: '#0d1b2e', border: '0.5px solid #185FA5',
-                                                borderRadius: '8px', padding: '10px 14px', fontSize: '13px',
-                                                color: '#fff', marginBottom: '14px', outline: 'none'
-                                            }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                            <button type="submit" style={{
-                                width: '100%', background: '#185FA5', color: '#fff',
-                                border: 'none', borderRadius: '8px', padding: '11px',
-                                fontSize: '14px', fontWeight: '500', cursor: 'pointer', marginTop: '4px'
-                            }}>
-                                Create account
-                            </button>
-                            <p style={{ textAlign: 'center', fontSize: '12px', color: '#85B7EB', marginTop: '1rem' }}>
+
+                            <label className={labelClass}>Email address</label>
+                            <input type="email" placeholder="you@example.com" required value={signupData.email} onChange={e => setSignupData({ ...signupData, email: e.target.value })} className={inputClass} />
+
+                            <label className={labelClass}>Password</label>
+                            <input type="password" placeholder="••••••••" required value={signupData.password} onChange={e => setSignupData({ ...signupData, password: e.target.value })} className={inputClass} />
+
+                            <button type="submit" className="w-full bg-[#185FA5] hover:bg-[#1a6db8] text-white text-sm font-medium py-2.5 rounded-xl mt-1 cursor-pointer transition-colors border-none">Create account</button>
+
+                            <p className="text-center text-xs text-[#85B7EB] mt-4">
                                 Already have an account?{' '}
-                                <span onClick={() => setActiveTab('login')}
-                                    style={{ color: '#378ADD', cursor: 'pointer', textDecoration: 'underline' }}>
+                                <span onClick={() => setActiveTab('login')} className="text-[#378ADD] underline cursor-pointer">
                                     Login
                                 </span>
                             </p>

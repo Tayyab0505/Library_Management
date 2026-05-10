@@ -6,7 +6,7 @@ const EditStudent = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const [form, setForm] = useState({ name: '', rollNo: '', marks: '' });
+    const [form, setForm] = useState({ name: '', rollNo: '' });
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
 
@@ -14,8 +14,7 @@ const EditStudent = () => {
         findById(id)
             .then(res => setForm({
                 name: res.data.name,
-                rollNo: res.data.rollNo,
-                marks: res.data.marks
+                rollNo: res.data.rollNo
             }))
             .catch(err => {
                 console.error("Failed to fetch student:", err);
@@ -30,7 +29,7 @@ const EditStudent = () => {
         e.preventDefault();
 
         try {
-            const res = await editStudent(id, { ...form, marks: parseInt(form.marks) });
+            const res = await editStudent(id, { ...form });
             if (res.data.message === 'Student updated successfuly') {
                 setIsError(false);
                 setMessage('Student updated successfully!');
@@ -46,9 +45,8 @@ const EditStudent = () => {
     };
 
     const fields = [
-        { label: 'Full Name', name: 'name', type: 'text', placeholder: 'Ali Hassan' },
-        { label: 'Roll No', name: 'rollNo', type: 'text', placeholder: 'CS-101' },
-        { label: 'Marks', name: 'marks', type: 'number', placeholder: '85' },
+        { label: 'Full Name', name: 'name', type: 'text', placeholder: 'Your Name' },
+        { label: 'Roll No', name: 'rollNo', type: 'text', placeholder: 'Roll No' },
     ];
 
     return (

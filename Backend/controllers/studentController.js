@@ -12,8 +12,8 @@ const JWT_SECRET = process.env.JWT_SECRET
 
 const addStudent = async (req, res) => {
     try {
-        const { name, email, password, rollNo, marks } = req.body;
-        if (name === '' || rollNo === '' || marks === '') {
+        const { name, email, password, rollNo } = req.body;
+        if (name === '' || rollNo === '') {
             return res.status(200).json({ status: 200, message: "Plz fill all the required fields" });
         }
 
@@ -28,7 +28,6 @@ const addStudent = async (req, res) => {
             email,
             password,
             rollNo,
-            marks,
             roleId: 2
         });
 
@@ -41,9 +40,9 @@ const addStudent = async (req, res) => {
 
 const updateStudent = async (req, res) => {
     const { id } = req.params;
-    const { name, rollNo, marks } = req.body;
+    const { name, rollNo } = req.body;
 
-    if (name === '' || rollNo === '' || marks === '') {
+    if (name === '' || rollNo === '') {
         return res.status(200).json({ status: 200, message: "Plz fill all the required fields" });
     }
 
@@ -62,8 +61,7 @@ const updateStudent = async (req, res) => {
         await Student.update(
             {
                 name,
-                rollNo,
-                marks,
+                rollNo
             },
             {
                 where: {

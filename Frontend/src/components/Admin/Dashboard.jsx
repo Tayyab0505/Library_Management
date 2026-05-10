@@ -93,7 +93,6 @@ const Dashboard = () => {
                 </h3>
                 <div className="flex flex-wrap gap-3">
                     {[
-                        { label: 'Add student', path: '/addStudent', style: 'border-blue-600 text-blue-600 hover:bg-blue-600' },
                         { label: 'Add book', path: '/addBook', style: 'border-emerald-600 text-emerald-600 hover:bg-emerald-600' },
                         { label: 'Assign book', path: '/assignBook', style: 'border-amber-600 text-amber-600 hover:bg-amber-600' },
                     ].map(({ label, path, style }) => (

@@ -25,10 +25,6 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       unique: "rollNo"
     },
-    marks: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
     roleId: {
       type: DataTypes.INTEGER,
       allowNull: true,

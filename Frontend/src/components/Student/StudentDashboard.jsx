@@ -20,9 +20,6 @@ const StudentDashboard = () => {
     );
 
     const total = students.length;
-    const passed = students.filter(s => s.marks >= 50).length;
-    const failed = total - passed;
-    const avg = total > 0 ? (students.reduce((sum, s) => sum + s.marks, 0) / total).toFixed(1) : '0.0';
 
     const handleDelete = (id) => {
         if (!window.confirm('Are you sure you want to delete this student?')) {
@@ -35,10 +32,7 @@ const StudentDashboard = () => {
     };
 
     const statCards = [
-        { label: 'Total Students', value: total, from: 'from-blue-500', to: 'to-blue-700' },
-        { label: 'Passed', value: passed, from: 'from-emerald-500', to: 'to-emerald-700' },
-        { label: 'Failed', value: failed, from: 'from-red-500', to: 'to-red-700' },
-        { label: 'Average Marks', value: avg, from: 'from-amber-400', to: 'to-amber-600' },
+        { label: 'Total Students', value: total, from: 'from-blue-500', to: 'to-blue-700' }
     ];
 
     return (
@@ -78,8 +72,6 @@ const StudentDashboard = () => {
                                     <th className="px-4 py-3 font-medium">#</th>
                                     <th className="px-4 py-3 font-medium">Name</th>
                                     <th className="px-4 py-3 font-medium">Roll No</th>
-                                    <th className="px-4 py-3 font-medium">Marks</th>
-                                    <th className="px-4 py-3 font-medium">Status</th>
                                     <th className="px-4 py-3 font-medium">Book Assigned</th>
                                     <th className="px-4 py-3 font-medium text-center">Actions</th>
                                 </tr>
@@ -97,11 +89,6 @@ const StudentDashboard = () => {
                                             <td className="px-4 py-3 text-gray-400">{i + 1}</td>
                                             <td className="px-4 py-3 font-medium text-gray-800">{s.name}</td>
                                             <td className="px-4 py-3 text-gray-600">{s.rollNo}</td>
-                                            <td className="px-4 py-3 text-gray-600">{s.marks}</td>
-                                            <td className="px-4 py-3">
-                                                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${s.marks >= 50 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
-                                                    {s.marks >= 50 ? 'PASS' : 'FAIL'} </span>
-                                            </td>
                                             <td className="px-4 py-3 text-gray-600">
                                                 {s.bookAssigned?.length > 0
                                                     ? s.bookAssigned.map(b => b.title).join(', ')
