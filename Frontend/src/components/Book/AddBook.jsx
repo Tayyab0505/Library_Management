@@ -1,156 +1,87 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { addBook } from '../../api/BookApi';
 
 const AddBook = () => {
+    const navigate = useNavigate();
+    const [form, setForm] = useState({ title: '', author: '', genre: '', publishedAt: '' });
+    const [message, setMessage] = useState('');
+    const [isError, setIsError] = useState(false);
 
-    const [title, setTitle] = useState('')
-    const [author, setAuthor] = useState('')
-    const [genre, setGenre] = useState('')
-    const [publishedAt, setPublishedAt] = useState('')
-
-    const [logStatus, setLogStatus] = useState('');
-    const [statusHolder, setStatusHolder] = useState('message');
+    const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
     const handleAdd = async (e) => {
         e.preventDefault();
-
-        const newBook = {
-            title,
-            author,
-            genre,
-            publishedAt
-        };
-
         try {
-            const res = await addBook(newBook);
-
+            const res = await addBook(form);
             if (res.data.message === 'Data saved successfully') {
-                setLogStatus(res.data.message);
-                setTitle('');
-                setAuthor('');
-                setGenre('');
-                setPublishedAt('');
+                setIsError(false);
+                setMessage('Book added successfully!');
+                setTimeout(() => navigate('/books'), 1500);
+            } else {
+                setIsError(true);
+                setMessage(res.data.message);
             }
-
-        } catch (error) {
-            console.error('Failed to add student:', error);
+        } catch {
+            setIsError(true);
+            setMessage('Something went wrong.');
         }
-    }
+    };
 
-    useEffect(() => {
-        if (logStatus !== '') {
-            setStatusHolder('showMessage');
-            const timer = setTimeout(() => {
-                setStatusHolder('message');
-                setLogStatus('');
-            }, 4000);
-            return () => clearTimeout(timer);
-        }
-    }, [logStatus]);
-
+    const fields = [
+        { label: 'Title', name: 'title', type: 'text', placeholder: 'The Great Gatsby' },
+        { label: 'Author', name: 'author', type: 'text', placeholder: 'F. Scott Fitzgerald' },
+        { label: 'Genre', name: 'genre', type: 'text', placeholder: 'Fiction' },
+        { label: 'Published At', name: 'publishedAt', type: 'date', placeholder: '' },
+    ];
 
     return (
-        <>
-            <div className="hero min-h-screen bg-[rgb(245,246,250)] overflow-y-auto py-10 px-4 flex items-start font-serif justify-center">
+        <div className="min-h-screen bg-[#F5F6FA] p-6 font-serif">
+            <div className="max-w-2xl mx-auto">
 
-                <div className="w-full h-120 sm:w-[90%] lg:w-[95%] bg-gray-800 text-white rounded-lg shadow-lg">
-                    <div className="heading text-center">
-                        <h1 className="my-5 text-3xl sm:text-4xl font-bold text-[#60a5fa] font-serif">Add New Book</h1>
-                    </div>
+                <div className="mb-6">
+                    <h1 className="text-2xl font-bold text-gray-800">Add New Book</h1>
+                    <p className="text-sm text-gray-500 mt-0.5">Fill in the details to add a book to the library</p>
+                </div>
 
-                    <form className="p-5" onSubmit={handleAdd}>
-                        <div className="initials flex md:flex-row flex-col justify-evenly gap-4">
-                            <div className="flex flex-col mb-3">
-                                <label htmlFor="title" className="text-xl mb-1 font-serif">
-                                    Title:
-                                </label>
-                                <input
-                                    type="text"
-                                    name="title"
-                                    id="title"
-                                    placeholder="Enter Title"
-                                   className="w-full font-serif md:w-[300px] px-4 py-2 rounded-xl border border-gray-600 bg-gray-700  focus:outline-none focus:border-[#60a5fa]"
-                                    required
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                />
-                            </div>
-
-                            <div className="flex flex-col mb-3">
-                                <label htmlFor="author" className="text-xl mb-1  font-serif">
-                                    Author:
-                                </label>
-                                <input
-                                    type="text"
-                                    name="author"
-                                    id="author"
-                                    placeholder="Enter Author Name"
-                                    className="w-full font-serif md:w-[300px] px-4 py-2 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:border-[#60a5fa]"
-                                    required
-                                    value={author}
-                                    onChange={(e) => setAuthor(e.target.value)}
-                                />
-                            </div>
-
-                            <div className="flex flex-col mb-3">
-                                <label htmlFor="genre" className="text-xl mb-1 font-serif">
-                                    Genre:
-                                </label>
-                                <input
-                                    type="text"
-                                    name="genre"
-                                    id="genre"
-                                    placeholder="Enter Genre"
-                                    className="w-full font-serif md:w-[300px] px-4 py-2 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:border-[#60a5fa]"
-                                    required
-                                    value={genre}
-                                    onChange={(e) => setGenre(e.target.value)}
-                                />
-                            </div>
-
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    {message && (
+                        <div className={`mb-4 px-4 py-3 rounded-xl text-sm font-medium ${isError ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-emerald-50 text-emerald-600 border border-emerald-200'}`}>
+                            {message}
                         </div>
+                    )}
 
-                        <div className="initials flex md:flex-row flex-col ml-10 mt-5">
-
-                            <div className="flex flex-col mb-3">
-                                <label htmlFor="publishedAt" className="text-xl mb-1 font-serif">
-                                    Published At:
-                                </label>
+                    <form onSubmit={handleAdd} className="flex flex-col gap-4">
+                        {fields.map(({ label, name, type, placeholder }) => (
+                            <div key={name}>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
                                 <input
-                                    type="date"
-                                    name="publishedAt"
-                                    id="publishedAt"
-                                    className="w-full font-serif md:w-[300px] px-4 py-2 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:border-[#60a5fa]"
+                                    type={type}
+                                    name={name}
+                                    placeholder={placeholder}
                                     required
-                                    value={publishedAt}
-                                    onChange={(e) => setPublishedAt(e.target.value)}
+                                    value={form[name]}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                                 />
                             </div>
-                        </div>
-                        <span className={statusHolder}>{logStatus}</span>
+                        ))}
 
-                        <div className="mt-20 flex justify-end">
-                            <Link to={'/books'}
-                                type="submit"
-                                className="px-6 py-2 mx-2 rounded-xl text-lg bg-gray-600 text-white hover:bg-gradient-to-r hover:from-[#3b82f6] hover:to-[#8b5cf6] hover:text-white transition"
-                            >
-                                go back
+                        <div className="flex justify-end gap-3 mt-2">
+                            <Link to="/books"
+                                className="px-5 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
+                                Cancel
                             </Link>
-
-                            <button
-                                type="submit"
-                                className="px-6 py-2 rounded-xl text-lg bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6] text-white font-bold hover:from-[#2563eb] hover:to-[#7c3aed] transition"
-                            >
-                                Add
+                            <button type="submit"
+                                className="px-5 py-2.5 rounded-xl text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition">
+                                Add Book
                             </button>
-
                         </div>
                     </form>
                 </div>
             </div>
-        </>
+        </div>
     );
-}
+};
 
-export default AddBook
+export default AddBook;
