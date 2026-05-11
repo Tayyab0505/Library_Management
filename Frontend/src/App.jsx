@@ -65,6 +65,28 @@ const router = createBrowserRouter([
       },
     ]
   },
+
+  // student rotes
+  {
+    element: <ProtectedRoute allowedRole="student" />,
+    children: [
+      {
+        path: '/student-dashboard',
+        element: <StudentLayout><StudentHome /></StudentLayout>
+
+      },
+      {
+        path: '/browse-books',
+        element: <StudentLayout><BrowseBooks /></StudentLayout>
+
+      },
+      {
+        path: '/student-profile',
+        element: <StudentLayout><StudentProfile /></StudentLayout>
+
+      },
+    ]
+  }
 ]);
 
 function App() {
