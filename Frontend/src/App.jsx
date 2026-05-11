@@ -1,6 +1,8 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import AppLayout from './layout/AppLayout';
+
 import ProtectedRoute from './components/ui/ProtectedRoute';
+import AuthPage from './components/Auth/AuthPage';
 
 import Dashboard from './components/Admin/Dashboard';
 import AssignBook from './components/Admin/AssignBook';
@@ -13,7 +15,6 @@ import BookDashboard from './components/Book/BookDashboard';
 import AddBook from './components/Book/AddBook';
 import EditBook from './components/Book/EditBook';
 import ReadBook from './components/Book/ReadBook';
-import AuthPage from './components/Auth/AuthPage';
 
 const router = createBrowserRouter([
 
@@ -22,90 +23,48 @@ const router = createBrowserRouter([
     path: '/', element: <AuthPage />
   },
 
-  // Protected - All inside app layout
+  // Admin routes proteted
   {
-    element: <ProtectedRoute />,
+    element: <ProtectedRoute allowedRole="admin" />,
     children: [
       {
         path: '/dashboard',
-        element: (
-          <AppLayout>
-            <Dashboard />
-          </AppLayout>
-        )
+        element: <AppLayout> <Dashboard /> </AppLayout>
       },
-
-      // Admin Path
       {
         path: '/assignBook',
-        element: (
-          <AppLayout>
-            <AssignBook />
-          </AppLayout>
-        )
+        element: <AppLayout> <AssignBook /> </AppLayout>
       },
-
-      // Student Path
       {
         path: '/students',
-        element: (
-          <AppLayout>
-            <StudentDashboard />
-          </AppLayout>
-        )
+        element: <AppLayout> <StudentDashboard /> </AppLayout>
       },
       {
         path: '/editStudent/:id',
-        element: (
-          <AppLayout>
-            <EditStudent />
-          </AppLayout>
-        )
+        element: <AppLayout> <EditStudent /> </AppLayout>
       },
       {
         path: '/readStudent/:id',
-        element: (
-          <AppLayout>
-            <ReadStudent />
-          </AppLayout>
-        )
+        element: <AppLayout> <ReadStudent /> </AppLayout>
       },
-
-      // Book Path
       {
         path: '/books',
-        element: (
-          <AppLayout>
-            <BookDashboard />
-          </AppLayout>
-        )
+        element: <AppLayout> <BookDashboard /> </AppLayout>
       },
       {
         path: '/addBook',
-        element: (
-          <AppLayout>
-            <AddBook />
-          </AppLayout>
-        )
+        element: <AppLayout> <AddBook /> </AppLayout>
       },
       {
         path: '/editBook/:id',
-        element: (
-          <AppLayout>
-            <EditBook />
-          </AppLayout>
-        )
+        element: <AppLayout> <EditBook /> </AppLayout>
       },
       {
         path: '/readBook/:id',
-        element: (
-          <AppLayout>
-            <ReadBook />
-          </AppLayout>
-        )
+        element: <AppLayout> <ReadBook /> </AppLayout>
       },
     ]
-  }
+  },
 ]);
 
 function App() {
