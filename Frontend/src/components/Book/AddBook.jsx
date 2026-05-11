@@ -8,7 +8,9 @@ const AddBook = () => {
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
 
-    const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
 
     const handleAdd = async (e) => {
         e.preventDefault();
@@ -68,12 +70,10 @@ const AddBook = () => {
                         ))}
 
                         <div className="flex justify-end gap-3 mt-2">
-                            <Link to="/books"
-                                className="px-5 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
+                            <Link to="/books" className="px-5 cursor-pointer py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
                                 Cancel
                             </Link>
-                            <button type="submit"
-                                className="px-5 py-2.5 rounded-xl text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition">
+                            <button type="submit" className="px-5 cursor-pointer py-2.5 rounded-xl text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition">
                                 Add Book
                             </button>
                         </div>

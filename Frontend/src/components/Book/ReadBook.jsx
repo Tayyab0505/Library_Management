@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import { findByID } from '../../api/BookApi';
 
 const ReadBook = () => {
-
   const { id } = useParams();
-  const [book, setBook] = useState('');
+  const [book, setBook] = useState(null);
 
   useEffect(() => {
     findByID(id)
@@ -13,41 +12,62 @@ const ReadBook = () => {
         setBook(res.data);
       }).catch(err => console.log(err));
 
-  }, [id])
+  }, [id]);
+
+  if (!book) {
+    return (
+      <div className="min-h-screen bg-[#F5F6FA] flex items-center justify-center">
+        <p className="text-gray-400">Loading...</p>
+      </div>
+    )
+  };
+
+  const rows = [
+    { label: 'Title', value: book.title },
+    { label: 'Author', value: book.author },
+    { label: 'Genre', value: book.genre },
+    { label: 'Published At', value: book.publishedAt },
+  ];
 
 
   return (
-    <>
-      <div className="hero min-h-screen bg-gradient-to-br bg-[rgb(245,246,250)] overflow-y-auto py-10 px-4 flex items-start justify-center">
+    <div className="min-h-screen bg-[#F5F6FA] p-6 font-serif">
+      <div className="max-w-2xl mx-auto">
 
-        <div className="w-full sm:w-[90%] lg:w-[82%] bg-gray-800 text-white rounded-lg shadow-lg">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">Book Details</h1>
+          <p className="text-sm text-gray-500 mt-0.5">Viewing details for "{book.title}"</p>
+        </div>
 
-          <div className="heading text-center">
-            <h1 className="my-5 text-3xl sm:text-4xl font-bold text-[#60a5fa] font-serif">Read Book</h1>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="bg-gradient-to-r from-[#1E3A5F] to-[#2563EB] p-6 flex items-center gap-4">
+            <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-white text-2xl font-bold">
+              {book.title.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <h2 className="text-white text-xl font-bold">{book.title}</h2>
+              <p className="text-white/70 text-sm">by {book.author}</p>
+            </div>
           </div>
 
-          {book && (
-            <div>
-              <h3 className='my-5 mx-5 text-2xl font-bold font-serif'>Title: {book.title}</h3>
-              <h3 className='my-5 mx-5 text-2xl font-bold font-serif'>Author: {book.author}</h3>
-              <h3 className='my-5 mx-5 text-2xl font-bold font-serif'>Genre: {book.genre}</h3>
-              <h3 className='my-5 mx-5 text-2xl font-bold font-serif'>Published At: {book.publishedAt}</h3>
-            </div>
-          )}
+          <div className="divide-y divide-gray-50">
+            {rows.map(({ label, value }) => (
+              <div key={label} className="flex justify-between items-center px-6 py-4">
+                <span className="text-sm text-gray-500">{label}</span>
+                <span className="text-sm font-medium text-gray-800">{value}</span>
+              </div>
+            ))}
+          </div>
 
-          <div className="mt-6 flex justify-end mr-4">
-            <Link to={'/books'}
-              type="submit"
-              className="px-6 py-2 font-serif mb-4 rounded-xl text-lg bg-gray-600 text-white hover:bg-gradient-to-r hover:from-[#3b82f6] hover:to-[#8b5cf6] hover:text-white transition"
-            >
-              back
-            </Link>
+          <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+            <Link to={`/editBook/${book.id}`} className="px-5 py-2.5 rounded-xl text-sm font-medium bg-amber-50 text-amber-600 hover:bg-amber-100 transition">Edit</Link>
 
+            <Link to="/books" className="px-5 py-2.5 rounded-xl text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition">Back to Books</Link>
           </div>
         </div>
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
 
 export default ReadBook

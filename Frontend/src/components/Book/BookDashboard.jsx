@@ -44,12 +44,7 @@ const BookDashboard = () => {
                         <h1 className="text-2xl font-bold text-gray-800">Books</h1>
                         <p className="text-sm text-gray-500 mt-0.5">Manage your library collection</p>
                     </div>
-                    <Link
-                        to="/addBook"
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-xl transition text-sm"
-                    >
-                        + Add Book
-                    </Link>
+                    <Link to="/addBook" className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-xl transition text-sm">+ Add Book</Link>
                 </div>
 
                 {/* Stat cards */}

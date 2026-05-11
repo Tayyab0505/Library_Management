@@ -20,7 +20,9 @@ const EditBook = () => {
             .catch(console.error);
     }, [id]);
 
-    const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
 
     const handleUpdate = async (e) => {
         e.preventDefault();
@@ -80,12 +82,10 @@ const EditBook = () => {
                         ))}
 
                         <div className="flex justify-end gap-3 mt-2">
-                            <Link to="/books"
-                                className="px-5 py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
+                            <Link to="/books" className="px-5 cursor-pointer py-2.5 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
                                 Cancel
                             </Link>
-                            <button type="submit"
-                                className="px-5 py-2.5 rounded-xl text-sm font-medium bg-amber-500 text-white hover:bg-amber-600 transition">
+                            <button type="submit" className="px-5 cursor-pointer py-2.5 rounded-xl text-sm font-medium bg-amber-500 text-white hover:bg-amber-600 transition">
                                 Update Book
                             </button>
                         </div>
