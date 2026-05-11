@@ -13,8 +13,8 @@ const JWT_SECRET = process.env.JWT_SECRET
 const addStudent = async (req, res) => {
     try {
         const { name, email, password, rollNo } = req.body;
-        if (name === '' || rollNo === '') {
-            return res.status(200).json({ status: 200, message: "Plz fill all the required fields" });
+        if (!name || !rollNo || !email || !password) {
+            return res.status(200).json({ message: "Please fill all the required fields" });
         }
 
         const rollNumber = await Student.findOne({ where: { rollNo } });
