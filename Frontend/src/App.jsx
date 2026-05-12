@@ -17,6 +17,7 @@ import AddBook from './components/Book/AddBook';
 import EditBook from './components/Book/EditBook';
 import ReadBook from './components/Book/ReadBook';
 import StudentHome from './components/StudentPortal/StudentHome';
+import BrowseBooks from './components/StudentPortal/BrowseBooks';
 
 const router = createBrowserRouter([
 
@@ -75,17 +76,14 @@ const router = createBrowserRouter([
       {
         path: '/student-dashboard',
         element: <StudentLayout><StudentHome /></StudentLayout>
-
       },
       {
         path: '/browse-books',
         element: <StudentLayout><BrowseBooks /></StudentLayout>
-
       },
       {
         path: '/student-profile',
         element: <StudentLayout><StudentProfile /></StudentLayout>
-
       },
     ]
   }
