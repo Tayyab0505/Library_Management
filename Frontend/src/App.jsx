@@ -16,8 +16,10 @@ import BookDashboard from './components/Book/BookDashboard';
 import AddBook from './components/Book/AddBook';
 import EditBook from './components/Book/EditBook';
 import ReadBook from './components/Book/ReadBook';
+
 import StudentHome from './components/StudentPortal/StudentHome';
 import BrowseBooks from './components/StudentPortal/BrowseBooks';
+import StudentProfile from './components/StudentPortal/StudentProfile';
 
 const router = createBrowserRouter([
 
