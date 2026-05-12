@@ -167,6 +167,8 @@ const loginAdmin = async (req, res) => {
             message: user.roleId === 1 ? 'Welcome Admin' : 'Welcome Student',
             token,
             email: user.email,
+            name: user.name,
+            rollNo: user.rollNo,
             role
         });
 

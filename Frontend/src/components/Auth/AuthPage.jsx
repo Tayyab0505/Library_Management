@@ -45,6 +45,9 @@ const AuthPage = () => {
             else if (res.data.message === 'Welcome Student') {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('role', 'student');
+                localStorage.setItem('studentName', res.data.name);
+                localStorage.setItem('studentEmail', res.data.email);
+                localStorage.setItem('studentRollNo', res.data.rollNo);
                 navigate('/student-dashboard', { replace: true });
             }
             else {
