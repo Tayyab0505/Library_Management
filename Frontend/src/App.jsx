@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import AppLayout from './layout/AppLayout';
+import StudentLayout from './layout/StudentLayout';
 
 import ProtectedRoute from './components/ui/ProtectedRoute';
 import AuthPage from './components/Auth/AuthPage';
@@ -15,6 +16,7 @@ import BookDashboard from './components/Book/BookDashboard';
 import AddBook from './components/Book/AddBook';
 import EditBook from './components/Book/EditBook';
 import ReadBook from './components/Book/ReadBook';
+import StudentHome from './components/StudentPortal/StudentHome';
 
 const router = createBrowserRouter([
 
