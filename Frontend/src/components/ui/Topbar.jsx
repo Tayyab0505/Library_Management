@@ -1,13 +1,6 @@
 import { AppBar, Toolbar, Typography, IconButton, Box, Avatar } from '@mui/material';
-import { useContext } from 'react';
-import { ColorModeContext } from '../../theme/ThemeProvider';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import { useTheme } from '@mui/material';
 
 export default function Topbar() {
-    const theme = useTheme();
-    const colorMode = useContext(ColorModeContext);
     const email = localStorage.getItem('adminEmail') || 'Admin';
     const initials = email.charAt(0).toUpperCase();
 
@@ -23,9 +16,6 @@ export default function Topbar() {
                 </Typography>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <IconButton onClick={colorMode.toggleColorMode} color="inherit" size="small">
-                        {theme.palette.mode === 'dark' ? <LightModeIcon fontSize="small" /> : <DarkModeIcon fontSize="small" />}
-                    </IconButton>
                     <Avatar sx={{ width: 32, height: 32, bgcolor: '#2563EB', fontSize: 14, fontWeight: 600 }}>
                         {initials}
                     </Avatar>
